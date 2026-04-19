@@ -1,6 +1,19 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+let aiInstance: GoogleGenAI | null = null;
+
+function getAIInstance() {
+  if (!aiInstance) {
+    const apiKey = typeof process !== 'undefined' ? process.env.GEMINI_API_KEY : import.meta.env.VITE_GEMINI_API_KEY;
+    
+    if (!apiKey) {
+      console.warn("GEMINI_API_KEY is missing. Please set it in your environment variables.");
+    }
+    
+    aiInstance = new GoogleGenAI({ apiKey: apiKey || "dummy-key" });
+  }
+  return aiInstance;
+}
 
 export interface StylingResult {
   analysis: string;
@@ -9,6 +22,13 @@ export interface StylingResult {
 }
 
 export async function getStylingAdvice(height: string, weight: string, imageBase64: string | null): Promise<StylingResult> {
+  const apiKey = typeof process !== 'undefined' ? process.env.GEMINI_API_KEY : import.meta.env.VITE_GEMINI_API_KEY;
+  
+  if (!apiKey) {
+    throw new Error("GEMINI_API_KEY가 설정되지 않았습니다. 클라우드플레어 설정에서 환경 변수를 확인해주세요.");
+  }
+
+  const ai = getAIInstance();
   const model = "gemini-3-flash-preview";
   
   const prompt = `
