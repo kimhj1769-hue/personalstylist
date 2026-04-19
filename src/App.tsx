@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Palette,
@@ -18,7 +18,8 @@ import {
   Sparkles,
   Shirt,
   Lightbulb,
-  ChevronLeft
+  ChevronLeft,
+  Check
 } from 'lucide-react';
 import { getStylingAdvice, StylingResult } from './services/stylistService';
 
